@@ -1,0 +1,45 @@
+{# templates/borrowing/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Borrowing index{% endblock %}
+
+{% block body %}
+<h1>Borrowing index</h1>
+
+<form id="filter-form" action="{{ path('app_borrowing_index') }}" method="get">
+    <label for="filter-date">Filter by date:</label>
+    <input type="date" id="filter-date" name="date" value="{{ app.request.query.get('date') }}" onchange="document.getElementById('filter-form').submit()">
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>DateBorrowed</th>
+            <th>Title</th>
+            <th>Student</th>
+            <th>BookReturned</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for borrowing in borrowings %}
+            <tr>
+                <td>{{ borrowing.dateBorrowed ? borrowing.dateBorrowed|date('Y-m-d : H:i') : '' }}</td>
+                <td>{{ borrowing.book.title }}</td>
+                <td>{{ borrowing.student.name ~ ' ' ~ borrowing.student.surname }}</td>
+                <td>{{ borrowing.bookReturned ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_borrowing_show', {'id': borrowing.id}) }}">show</a>
+                    <a href="{{ path('app_borrowing_edit', {'id': borrowing.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_borrowing_new') }}">Create new</a>
+{% endblock %}
